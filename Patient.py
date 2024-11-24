@@ -1,4 +1,6 @@
 import re
+import json
+from datetime import datetime
 
 class Patient:
     def __init__(self, patient_id, first_name, last_name, email, gender, phone, date_of_birth):
@@ -9,6 +11,24 @@ class Patient:
         self.set_phone(phone)
         self.set_date_of_birth(date_of_birth)
 
+    # Классовый метод создания клиента из JSON
+    @classmethod
+    def from_json(data_json):
+        try:
+            data = json.loads(data_json)
+            date_of_birth = datetime.strptime(date_of_birth.strip(), "%Y-%m-%d").date()
+            return Client(
+                patient_id    = data['patient_id'],
+                first_name    = data['first_name'],
+                last_name     = data['last_name'],
+                email         = data['email'],
+                gender        = data['gender'],
+                phone         = data['phone'],
+                date_of_birth = date_of_birth
+            )
+        except Exception as e:
+            raise ValueError("Данные JSON не верны")
+            
     # Getters
     def get_patient_id(self):
         return self.__patient_id
