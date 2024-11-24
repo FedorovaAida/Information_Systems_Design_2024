@@ -29,7 +29,7 @@ class Patient:
         except Exception as e:
             raise ValueError("Данные JSON не верны")
             
-    # Getters
+    # Геттеры
     def get_patient_id(self):
         return self.__patient_id
     def get_first_name(self):
@@ -45,7 +45,7 @@ class Patient:
     def get_date_of_birth(self):
         return self.__date_of_birth
 
-    # Setters
+    # Сеттеры
    def set_first_name(self, first_name):
         if not self.validate_name(first_name):
             raise ValueError("Имя должно быть непустой строкой.")
@@ -92,3 +92,28 @@ class Patient:
     @staticmethod
     def validate_phone(phone):
         return sinstance(phone, str) and re.fullmatch(r'((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}', phone)
+
+    # Строковое представление для краткой версии объекта
+    @property
+    def short_version(self):
+        return f"Patient({self.get_first_name()} {self.get_last_name()})"
+    
+    # Представление для полной версии объекта
+    @property
+    def full_version(self):
+        return (f"Patient(first_name={self.get_first_name()}, last_name={self.get_last_name()}, "
+                f"date_of_birth={self.get_date_of_birth()}, email={self.get_email()}, "
+                f"gender={self.get_gender()}, phone={self.get_phone()})")
+    
+    
+    # Сравнение объектов на равенство
+    def __eq__(self, other):
+        if isinstance(other, Patient):
+            return (self.get_first_name() == other.get_first_name() and
+                    self.get_last_name() == other.get_last_name() and
+                    self.get_date_of_birth() == other.get_date_of_birth() and
+                    self.get_email() == other.get_email() and
+                    self.get_gender() == other.get_gender() and
+                    self.get_phone() == other.get_phone())
+        return False
+
