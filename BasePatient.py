@@ -4,14 +4,12 @@ from datetime import datetime
 #Базовый класс для пациента с общей логикой
 class BasePatient():
     def __init__(self, first_name, last_name, email, patient_id = None):
+        self.__patient_id = patient_id
         self.set_first_name(first_name)
         self.set_last_name(last_name)
-        self.set_patient_id(teacher_id)
         self.set_email(email)
 
     # Геттеры
-    def get_patient_id(self):
-        return self.__patient_id
     def get_first_name(self):
         return self.__first_name
     def get_last_name(self):
@@ -29,11 +27,6 @@ class BasePatient():
         if not self.validate_name(last_name):
             raise ValueError("Фамилия должна быть непустой строкой.")
         self.__last_name = last_name
-
-    def set_patient_id(self, patient_id):
-        if not self.validate_patient_id(patient_id):
-            raise ValueError("")
-        self.__patient_id = patient_id
     
     def set_email(self, email):
         if not self.validate_email(email):
@@ -44,10 +37,6 @@ class BasePatient():
     @staticmethod
     def validate_name(name):
         return isinstance(name, str) and bool(name.strip())
-
-    @staticmethod
-    def validate_patient_id(patient_id):
-        return isinstance(patient_id, int) or patient_id > 0
 
     @staticmethod
     def validate_email(email):
