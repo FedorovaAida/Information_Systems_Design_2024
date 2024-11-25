@@ -5,10 +5,10 @@
 
 В итоге была построена ER-модель имеющая 3 таблицы: пациенты, психологи и сессии. Добавленные поля отображены в прикрепленном рисунке
 
-Код создания таблиц и выполнение связи для сайта:
+Код создания таблиц и выполнение связи для сайта https://databasediagram.com/app (DBML):
 
 Table patients {
-  patients_id int [pk, increment]
+  patient_id int [pk, increment]
   first_name varchar
   last_name varchar
   email varchar
@@ -22,8 +22,8 @@ Table sessions {
   date date
   time time
   price decimal
-  patient_id int [ref: > patients.patients_id]
-  psychologist_id int [ref: > psychologists.psychologist_id]
+  patient_id int [ref: > patients.patient_id]
+  psychologist_id int [ref: > psychologists.psychologist_id ]
 }
 
 Table psychologists {
