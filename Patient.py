@@ -59,7 +59,7 @@ class Patient(BasePatient):
     # Функции валидации
     @staticmethod
     def validate_date_of_birth(date_of_birth):
-        return bool(date_of_birth)
+        return isinstance(date_of_birth, datetime)
 
     @staticmethod
     def validate_gender(gender):
@@ -73,16 +73,3 @@ class Patient(BasePatient):
     @property
     def short_version(self):
         return f"Patient({self.get_first_name()} {self.get_last_name()})"
-
-    # Представление для полной версии объекта
-    @property
-    def full_version(self):
-        return (
-            f"first_name={self.get_first_name()}, last_name={self.get_last_name()}, date_of_birth={self.get_date_of_birth()}, email={self.get_email()},"
-            f"gender={self.get_gender()}, phone={self.get_phone()})")
-
-pat1= Patient('Fedorova', 'Aida', 'fedorovaaida05@gmail.com', 'ж', '89094687845', '16.05.2003')
-print(pat1.__str__())
-pat1.set_first_name('Shulga')
-print(pat1.__str__())
-print(pat1.__first_name)
