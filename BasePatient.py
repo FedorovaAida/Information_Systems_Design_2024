@@ -47,7 +47,7 @@ class BasePatient():
 
     # Сравнение объектов на равенство
     def __eq__(self, other):
-        if self.get_first_name() != other.get_first_name() and self.get_last_name() != other.get_last_name() and self.get_email() != other.get_email():
+        if self.get_email() != other.get_email():
             return False
         return True
 
@@ -61,4 +61,4 @@ class BasePatient():
 
 
     def __repr__(self):
-        return f"Name:{self.get_first_name()} {self.get_last_name()}, email: {self.get_email()})"
+        return f"Name:{self.get_first_name()} {self.get_last_name()}, email: {self.get_email()}"
