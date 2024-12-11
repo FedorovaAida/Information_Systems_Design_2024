@@ -3,8 +3,8 @@ from datetime import datetime
 
 # Базовый класс для пациента с общей логикой
 class BasePatient():
-    def __init__(self, first_name, last_name, email, patient_id=None):
-        self.__patient_id = patient_id
+    def __init__(self, first_name, last_name, email, id=None):
+        self.__id = id
         self.set_first_name(first_name)
         self.set_last_name(last_name)
         self.set_email(email)
