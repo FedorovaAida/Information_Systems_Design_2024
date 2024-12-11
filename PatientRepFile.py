@@ -16,9 +16,9 @@ class PatientRepFile:
         # Чтение данных из файла
         data = self.strategy.read()
         # Генерация нового ID
-        new_id = max([entry['patient_id'] for entry in data], default=0) + 1   
+        new_id = max([entry['id'] for entry in data], default=0) + 1   
         new_entity = {
-            'patient_id': new_id,
+            'id': new_id,
             'first_name': first_name,
             'last_name': last_name,
             'email': email,
@@ -39,7 +39,7 @@ class PatientRepFile:
         """Получить пациента по ID"""
         data = self.strategy.read()
         for entry in data:
-            if entry['patient_id'] == patient_id:
+            if entry['id'] == id:
                 return entry
         return None  # Если объект не найден
 
@@ -57,12 +57,12 @@ class PatientRepFile:
             data.sort(key=lambda x: x.get(field))
         return data
 
-    def replace_by_id(self, patient_id, first_name, last_name, email, gender, phone, date_of_birth):
+    def replace_by_id(self, entity_id, first_name, last_name, email, gender, phone, date_of_birth):
         """Заменить данные пациента по ID"""
         data = self.strategy.read()
-        entity = self.get_by_id(patient_id)
+        entity = self.get_by_id(entity_id)
         if not entity:
-            raise ValueError(f"Пациент с ID {patient_id} не найден.")
+            raise ValueError(f"Пациент с ID {entity_id} не найден.")
         # Проверка на уникальность почты
         if email and email != entity['email'] and any(entry['email'] == email for entry in data):
             raise ValueError('Email должен быть уникальным!')
@@ -82,12 +82,12 @@ class PatientRepFile:
         # Записываем обновленные данные в файл
         self.strategy.write(data)
 
-    def delete_by_id(self, patient_id):
+    def delete_by_id(self, entity_id):
         """Удалить пациента по ID"""
         data = self.strategy.read()
-        entity = self.get_by_id(patient_id)
+        entity = self.get_by_id(entity_id)
         if not entity:
-            raise ValueError(f"Пациент с ID {patient_id} не найден.")
+            raise ValueError(f"Пациент с ID {entity_id} не найден.")
         data.remove(entity)
         self.strategy.write(data)
 
