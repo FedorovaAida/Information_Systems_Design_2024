@@ -6,8 +6,8 @@ from BasePatient import BasePatient
 
 # Полная версия класса пациента
 class Patient(BasePatient):
-    def __init__(self, first_name, last_name, email, gender, phone, date_of_birth, patient_id=None):
-        super(Patient, self).__init__(first_name, last_name, email, patient_id)
+    def __init__(self, first_name, last_name, email, gender, phone, date_of_birth, id=None):
+        super(Patient, self).__init__(first_name, last_name, email, id)
         self.set_gender(gender)
         self.set_phone(phone)
         self.set_date_of_birth(date_of_birth)
@@ -19,7 +19,7 @@ class Patient(BasePatient):
             data = json.loads(data_json)
             date_of_birth = datetime.strptime(data['date_of_birth'].strip(), "%Y-%m-%d").date()
             return Patient(
-                patient_id=data['patient_id'],
+                id=data['id'],
                 first_name=data['first_name'],
                 last_name=data['last_name'],
                 email=data['email'],
