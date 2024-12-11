@@ -8,7 +8,7 @@
 Код создания таблиц и выполнение связи для сайта https://databasediagram.com/app (DBML):
 
 Table patients {
-  patient_id int [pk, increment]
+  id int [pk, increment]
   first_name varchar
   last_name varchar
   email varchar
@@ -18,16 +18,16 @@ Table patients {
 }
 
 Table sessions {
-  session_id int [pk, increment]
+  id int [pk, increment]
   date date
   time time
   price decimal
-  patient_id int [ref: > patients.patient_id]
-  psychologist_id int [ref: > psychologists.psychologist_id ]
+  patient_id int [ref: > patients.id]
+  psychologist_id int [ref: > psychologists.id ]
 }
 
 Table psychologists {
-  psychologist_id int [pk, increment]
+  id int [pk, increment]
   first_name varchar
   last_name varchar
   phone varchar
