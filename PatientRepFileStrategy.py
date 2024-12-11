@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 
 # Абстрактный базовый класс стратегии работы с файлами
-class ClientRepFileStrategy(ABC):
+class PatientRepFileStrategy(ABC):
   
     @abstractmethod
     def read(self):
