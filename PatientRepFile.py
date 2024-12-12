@@ -86,8 +86,3 @@ class PatientRepFile:
     def get_count(self):
         """Получить количество элементов"""
         return len(self._data)
-    
-    def get_count(self):
-        """Получить количество элементов"""
-        data = self.strategy.read()
-        return len(data)
