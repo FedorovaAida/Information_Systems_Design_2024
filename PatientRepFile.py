@@ -11,7 +11,7 @@ class PatientRepFile:
         """Получить все элементы"""
         return self.strategy.read()
     
-    def add_entity(self, first_name, last_name, email, gender, phone, date_of_birth):      
+    def add_entity(self, first_name, last_name, email, gender, phone, disease):      
         """Добавить нового пациента в список с новым ID"""
         # Чтение данных из файла
         data = self.strategy.read()
@@ -25,7 +25,7 @@ class PatientRepFile:
             'gender': gender,
             'email': email,
             'phone': phone,
-            'date_of_birth': date_of_birth
+            'disease': disease
         }
         # Проверка на уникальность почты
         if any(entry['email'] == email for entry in data):
@@ -57,7 +57,7 @@ class PatientRepFile:
             data.sort(key=lambda x: x.get(field))
         return data
 
-    def replace_by_id(self, entity_id, first_name, last_name, email, gender, phone, date_of_birth):
+    def replace_by_id(self, entity_id, first_name, last_name, email, gender, phone, disease):
         """Заменить данные пациента по ID"""
         data = self.strategy.read()
         entity = self.get_by_id(entity_id)
@@ -77,8 +77,8 @@ class PatientRepFile:
             entity['gender'] = gender
         if phone:
             entity['phone'] = phone
-        if date_of_birth:
-            entity['date_of_birth'] = date_of_birth
+        if disease:
+            entity['disease'] = disease
         # Записываем обновленные данные в файл
         self.strategy.write(data)
 
