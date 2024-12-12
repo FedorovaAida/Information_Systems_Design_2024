@@ -1,4 +1,4 @@
-import PatientRepFile
+from PatientRepFile import PatientRepFile
 
 class PatientRepFileAdapter:
 
