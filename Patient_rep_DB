@@ -1,0 +1,77 @@
+import psycopg2
+import uuid
+
+class PatientRepDB:
+    
+    def __init__(self, db_config):
+        self.connection = psycopg2.connect(
+            dbname=db_config['dbname'],
+            user=db_config['user'],
+            password=db_config['password'],
+            host=db_config['host'],
+            port=db_config['port']
+        )
+        self.connection.autocommit = True
+    
+    def get_by_id(self, patient_id):
+        with self.connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM patient WHERE id = %s", (patient_id,))
+            result = cursor.fetchone()
+        return result
+    
+    def get_k_n_short_list(self, k, n):
+        with self.connection.cursor() as cursor:
+            offset = k * (n - 1)
+            cursor.execute("""
+                SELECT id, first_name, last_name, phone FROM patient
+                ORDER BY id LIMIT %s OFFSET %s
+            """, (k, offset))
+            result = cursor.fetchall()
+        return result
+    
+    def add(self, first_name, last_name, email, gender, phone, disease):
+        new_id = str(uuid.uuid4())
+        with self.connection.cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO patient (id, first_name, last_name, email, gender, phone, disease)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (new_id, first_name, last_name, email, gender, phone, disease))
+        return new_id
+   
+    def update_by_id(self, patient_id, first_name=None, last_name=None, email=None, gender=None, phone=None, disease=None):
+        fields = []
+        values = []
+        if first_name is not None:
+            fields.append("first_name = %s")
+            values.append(first_name)
+        if last_name is not None:
+            fields.append("last_name = %s")
+            values.append(last_name)
+        if email is not None:
+            fields.append("email = %s")
+            values.append(email)
+        if gender is not None:
+            fields.append("gender = %s")
+            values.append(gender)
+        if phone is not None:
+            fields.append("phone = %s")
+            values.append(phone)
+        if disease is not None:
+            fields.append("disease = %s")
+            values.append(disease)
+        values.append(patient_id)
+        with self.connection.cursor() as cursor:
+            cursor.execute(f"""
+                UPDATE patient
+                SET {', '.join(fields)}
+                WHERE id = %s
+            """, tuple(values))
+    
+    def delete_by_id(self, patient_id):
+        with self.connection.cursor() as cursor:
+            cursor.execute("DELETE FROM patient WHERE id = %s", (patient_id,))
+    def get_count(self):
+        with self.connection.cursor() as cursor:
+            cursor.execute("SELECT COUNT(*) FROM patient")
+            result = cursor.fetchone()
+        return result[0]
