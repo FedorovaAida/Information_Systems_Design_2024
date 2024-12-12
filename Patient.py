@@ -1,23 +1,21 @@
 import re
 import json
-from datetime import datetime
 from BasePatient import BasePatient
 
 
 # Полная версия класса пациента
 class Patient(BasePatient):
-    def __init__(self, first_name, last_name, email, gender, phone, date_of_birth, id=None):
+    def __init__(self, first_name, last_name, email, gender, phone, disease, id=None):
         super(Patient, self).__init__(first_name, last_name, email, id)
         self.set_gender(gender)
         self.set_phone(phone)
-        self.set_date_of_birth(date_of_birth)
+        self.disease(disease)
 
     # Классовый метод создания клиента из JSON
     @classmethod
     def from_json(data_json):
         try:
             data = json.loads(data_json)
-            date_of_birth = datetime.strptime(data['date_of_birth'].strip(), "%Y-%m-%d").date()
             return Patient(
                 id=data['id'],
                 first_name=data['first_name'],
@@ -25,7 +23,7 @@ class Patient(BasePatient):
                 email=data['email'],
                 gender=data['gender'],
                 phone=data['phone'],
-                date_of_birth=date_of_birth
+                disease=data['disease']
             )
         except Exception as e:
             raise ValueError("Данные JSON не верны")
@@ -37,14 +35,14 @@ class Patient(BasePatient):
     def get_gender(self):
         return self.__gender
 
-    def get_date_of_birth(self):
-        return self.__date_of_birth
+    def get_disease(self):
+        return self.__disease
 
     # Сеттеры
-    def set_date_of_birth(self, date_of_birth):
-        if not self.validate_date_of_birth(date_of_birth):
-            raise ValueError("Дата рождения не может быть пустой.")
-        self.__date_of_birth = date_of_birth
+    def set_disease(self, disease):
+        if not self.validate_disease(disease):
+            raise ValueError("Болезнь не может быть пустой.")
+        self.__disease = disease
 
     def set_phone(self, phone):
         if not self.validate_phone(phone):
@@ -58,8 +56,8 @@ class Patient(BasePatient):
 
     # Функции валидации
     @staticmethod
-    def validate_date_of_birth(date_of_birth):
-        return isinstance(date_of_birth, datetime)
+    def validate_disease(disease):
+        return isinstance(disease, str) and bool(disease.strip())
 
     @staticmethod
     def validate_gender(gender):
