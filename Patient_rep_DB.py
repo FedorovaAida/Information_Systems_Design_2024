@@ -2,7 +2,6 @@ import uuid
 from DatabaseConnection import DatabaseConnection
 
 class PatientRepDB:
-    
     """Класс для управления сущностью patient."""
     def __init__(self, db_config):
         self.db = DatabaseConnection(db_config)
@@ -26,39 +25,34 @@ class PatientRepDB:
             result = cursor.fetchall()
         return result
 
-    def add(self, first_name, last_name, email, gender, phone, disease):
+    def add(self, patient):
         """Добавить нового пациента."""
         new_id = str(uuid.uuid4())
         with self.db.get_cursor() as cursor:
             cursor.execute("""
                 INSERT INTO patient (id, first_name, last_name, email, gender, phone, disease)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """, (new_id, first_name, last_name, email, gender, phone, disease))
+            """, (new_id, patient.get_first_name(), patient.get_last_name(), patient.get_email(), patient.get_gender(), patient.get_phone(), patient.get_disease()))
         return new_id
 
-    def update_by_id(self, patient_id, first_name=None, last_name=None, email=None, gender=None, phone=None, disease=None):
+    def update_by_id(self, patient):
         """Обновить данные пациента по ID."""
         fields = []
         values = []
-        if first_name is not None:
-            fields.append("first_name = %s")
-            values.append(first_name)
-        if last_name is not None:
-            fields.append("last_name = %s")
-            values.append(last_name)
-        if email is not None:
-            fields.append("email = %s")
-            values.append(email)
-        if gender is not None:
-            fields.append("gender = %s")
-            values.append(gender)
-        if phone is not None:
-            fields.append("phone = %s")
-            values.append(phone)
-        if disease is not None:
-            fields.append("disease = %s")
-            values.append(disease)
-        values.append(patient_id)
+        fields.append("first_name = %s")
+        values.append(patient.get_first_name())
+        fields.append("last_name = %s")
+        values.append(patient.get_last_name())
+        fields.append("email = %s")
+        values.append(patient.get_email())
+        fields.append("gender = %s")
+        values.append(patient.get_gender())
+        fields.append("phone = %s")
+        values.append(patient.get_phone())
+        fields.append("disease = %s")
+        values.append(patient.get_disease())
+        values.append(patient.get_id())
+       
         with self.db.get_cursor() as cursor:
             cursor.execute(f"""
                 UPDATE patient
@@ -70,7 +64,7 @@ class PatientRepDB:
         """Удалить пациента по ID."""
         with self.db.get_cursor() as cursor:
             cursor.execute("DELETE FROM patient WHERE id = %s", (patient_id,))
-    
+
     def get_count(self):
         """Получить количество записей в таблице."""
         with self.db.get_cursor() as cursor:
