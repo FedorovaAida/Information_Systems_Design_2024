@@ -1,7 +1,8 @@
 import uuid
 from DatabaseConnection import DatabaseConnection
 
-class ClientRepDB:
+class PatientRepDB:
+    
     """Класс для управления сущностью patient."""
     def __init__(self, db_config):
         self.db = DatabaseConnection(db_config)
@@ -69,6 +70,7 @@ class ClientRepDB:
         """Удалить пациента по ID."""
         with self.db.get_cursor() as cursor:
             cursor.execute("DELETE FROM patient WHERE id = %s", (patient_id,))
+    
     def get_count(self):
         """Получить количество записей в таблице."""
         with self.db.get_cursor() as cursor:
