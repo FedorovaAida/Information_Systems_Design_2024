@@ -16,12 +16,12 @@ class PatientRepFileAdapter:
         self._patient_rep_file.delete_by_id(id)
         self._patient_rep_file.write_data_to_file()
 
-    def update_by_id(self, entity_id, first_name, last_name, email, gender, phone, disease):
-        self._patient_rep_file.replace_by_id(entity_id, first_name, last_name, email, gender, phone, disease)
+    def update_by_id(self, patient):
+        self._patient_rep_file.replace_by_id(patient)
         self._patient_rep_file.write_data_to_file()
 
-    def add(self, first_name, last_name, email, gender, phone, disease):
-        self._patient_rep_file.add_entity(first_name, last_name, email, gender, phone, disease)
+    def add(self, patient):
+        self._patient_rep_file.add_entity(patient)
         self._patient_rep_file.write_data_to_file()
 
     def get_count(self):
