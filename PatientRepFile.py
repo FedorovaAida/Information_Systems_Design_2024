@@ -15,22 +15,21 @@ class PatientRepFile:
     def read_data_from_file(self):
         self._data = self._strategy.read()
 
-    def add_entity(self, first_name, last_name, email, gender, phone, disease):
+    def add_entity(self, patient):
         """Добавить нового пациента в список с новым ID"""
         # Генерация нового ID
         new_id = max([entry['id'] for entry in self._data], default=0) + 1
         new_entity = {
             'id': new_id,
-            'first_name': first_name,
-            'last_name': last_name,
-            'email': email,
-            'gender': gender,
-            'email': email,
-            'phone': phone,
-            'disease': disease
+            'first_name': patient.get_first_name(),
+            'last_name': patient.get_last_name(),
+            'email': patient.get_email(),
+            'gender': patient.get_gender(),
+            'phone': patient.get_phone(),
+            'disease': patient.get_disease()
         }
         # Проверка на уникальность почты
-        if any(entry['email'] == email for entry in self._data):
+        if any(entry['email'] == patient.get_email() for entry in self._data):
             raise ValueError('Email должен быть уникальным!')
         # Добавляем нового пациента в список
         self._data.append(new_entity)
@@ -54,8 +53,17 @@ class PatientRepFile:
             self._data.sort(key=lambda x: x.get(field))
         return self._data
 
-    def replace_by_id(self, entity_id, first_name, last_name, email, gender, phone, disease):
+    def replace_by_id(self, patient):
         """Заменить данные пациента по ID"""
+
+        entity_id = patient.get_id()
+        first_name = patient.get_first_name()
+        last_name = patient.get_last_name()
+        email = patient.get_email()
+        gender = patient.get_gender()
+        phone = patient.get_phone()
+        disease = patient.get_disease()
+
         entity = self.get_by_id(entity_id)
         if not entity:
             raise ValueError(f"Пациент с ID {entity_id} не найден.")
@@ -76,6 +84,7 @@ class PatientRepFile:
         if disease:
             entity['disease'] = disease
 
+
     def delete_by_id(self, entity_id):
         """Удалить пациента по ID"""
         entity = self.get_by_id(entity_id)
@@ -86,3 +95,8 @@ class PatientRepFile:
     def get_count(self):
         """Получить количество элементов"""
         return len(self._data)
+
+    def get_count(self):
+        """Получить количество элементов"""
+        data = self.strategy.read()
+        return len(data)
