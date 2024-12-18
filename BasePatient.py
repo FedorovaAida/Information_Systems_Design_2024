@@ -1,6 +1,3 @@
-import re
-from datetime import datetime
-
 # Базовый класс для пациента с общей логикой
 class BasePatient():
     def __init__(self, first_name, last_name, email, id=None):
@@ -10,6 +7,8 @@ class BasePatient():
         self.set_email(email)
 
     # Геттеры
+    def get_id(self):
+        return self.__id
     def get_first_name(self):
         return self.__first_name
 
@@ -44,21 +43,19 @@ class BasePatient():
     def validate_email(email):
         return "@" in email
 
-
     # Сравнение объектов на равенство
     def __eq__(self, other):
+        if other is None:
+            return False
         if self.get_email() != other.get_email():
             return False
         return True
 
-
     def __hash__(self):
         return hash(self.get_first_name(), self.get_last_name(), self.get_email())
 
-
     def __str__(self):
         return f"Patient name is {self.get_first_name()} {self.get_last_name()}, (email: {self.get_email()})"
-
 
     def __repr__(self):
         return f"Name:{self.get_first_name()} {self.get_last_name()}, email: {self.get_email()}"
