@@ -1,7 +1,8 @@
 import psycopg2
+
+
 class DatabaseConnection:
 
-    """Класс для управления подключением к базе данных (Singleton)."""
     _instance = None
 
     def __new__(cls, db_config):
@@ -25,7 +26,6 @@ class DatabaseConnection:
         return self.connection.cursor()
 
     def table_exists(self, table_name):
-        """Проверяет, существует ли таблица в базе данных."""
         with self.get_cursor() as cursor:
             cursor.execute("""
                 SELECT EXISTS (
@@ -38,18 +38,17 @@ class DatabaseConnection:
         return result[0]
 
     def ensure_table_exists(self):
-        """Убеждается, что таблица patient существует, и создает её при необходимости."""
         if not self.table_exists("patient"):
             with self.get_cursor() as cursor:
                 cursor.execute("""
                     CREATE TABLE IF NOT EXISTS patient (
                         id UUID PRIMARY KEY,
                         first_name VARCHAR(50) NOT NULL,
-                        last_name VARCHAR(50) NOT NULL,                       
+                        last_name VARCHAR(50) NOT NULL, 
+                        email VARCHAR(255) UNIQUE,                      
                         gender VARCHAR(1) CHECK (gender IN ('М', 'Ж')),
                         phone VARCHAR(15) NOT NULL,
-                        disease VARCHAR(500) NOT NULL,
-                        email VARCHAR(255) UNIQUE
+                        disease VARCHAR(500) NOT NULL
                     );
                 """)
                 print("Таблица 'patient' успешно создана.")
