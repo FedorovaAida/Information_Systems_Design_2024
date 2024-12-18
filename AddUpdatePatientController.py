@@ -1,51 +1,37 @@
 from Patient import Patient
-class AddUpdatePatientController:
-    """Контроллер для добавления пациента"""
+
+
+class AddUpdateController:
+
     def __init__(self, model):
         self.model = model
+
     @staticmethod
-    def validate_data(first_name, last_name, email, gender, phone, disease):
-        """Использует функции из Patient и BasePatient для валидации данных"""
+    def validate_data(patient):
         errors = []
-        if not Patient.validate_name(first_name):
+        if not Patient.validate_name(patient.get_first_name()):
             errors.append("Фамилия не может быть пустой или некорректной.")
-        if not Patient.validate_name(last_name):
-            errors.append("Фамилия не может быть пустой или некорректной.")
-        if not Patient.validate_email(email):
-            errors.append("Некорректный e-mail.")
-        if not Patient.validate_gender(gender):
+        if not Patient.validate_name(patient.get_last_name()):
+            errors.append("Имя не может быть пустым или некорректным.")
+        if not Patient.validate_email(patient.get_email()):
+            errors.append("Некорректный email")
+        if not Patient.validate_gender(patient.get_gender()):
             errors.append("Пол должен быть указан как 'М' или 'Ж'.")
-        if not Patient.validate_phone(phone):
+        if not Patient.validate_phone(patient.get_phone()):
             errors.append("Некорректный номер телефона.")
-        if not Patient.validate_disease(disease):
-            errors.append("Диагноз должен быть корректной строкой.")
+        if not Patient.validate_disease(patient.get_disease()):
+            errors.append("Диагноз не может быть пустым или некорректным.")
         if errors:
             raise ValueError("\n".join(errors))
 
-    def add_patient(self, first_name, last_name, email, gender, phone, disease):
-        """Добавить пациента после валидации"""
+    def add_patient(self, patient):
         # Валидация данных
-        self.validate_data(first_name, last_name, email, gender, phone, disease)
-        # Если данные корректны, вызываем метод модели для добавления пациента
-        self.model.add_patient(
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            gender=gender,
-            phone=phone,
-            disease=disease
-        )
-    def update_patient(self, id, first_name, last_name, email, gender, phone, disease):
-        """Добавить пациента после валидации"""
+        self.validate_data(patient)
+        # Если данные корректны, вызываем метод модели для добавления клиента
+        self.model.add_patient(patient)
+
+    def update_patient(self, patient):
         # Валидация данных
-        self.validate_data(first_name, last_name, email, gender, phone, disease)
-        # Если данные корректны, вызываем метод модели для корректирования пациента
-        self.model.update_patient(
-            patient_id=id,
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            gender=gender,
-            phone=phone,
-            disease=disease
-        )
+        self.validate_data(patient)
+        # Если данные корректны, вызываем метод модели для корректирования клиента
+        self.model.update_patient(patient)
