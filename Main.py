@@ -2,6 +2,7 @@ from Patient_rep_DB import PatientRepDB
 from PatientModel import PatientModel
 from MainView import MainView
 from MainController import MainController
+
 import tkinter as tk
 if __name__ == "__main__":
     # Подключение к базе данных
