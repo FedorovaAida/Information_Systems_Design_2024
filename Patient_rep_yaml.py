@@ -8,7 +8,6 @@ class PatientRepYamlStrategy(PatientRepFileStrategy):
         self.filename = filename
 
     def read(self):
-        """Прочитать данные из YAML файла"""
         if os.path.exists(self.filename):
             with open(self.filename, 'r') as f:
                 data = yaml.safe_load(f)
@@ -16,6 +15,5 @@ class PatientRepYamlStrategy(PatientRepFileStrategy):
         return []
 
     def write(self, data):
-        """Записать данные в YAML файл"""
         with open(self.filename, 'w') as f:
             yaml.dump(data, f, default_flow_style=False)
