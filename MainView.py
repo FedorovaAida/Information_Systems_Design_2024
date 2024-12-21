@@ -29,11 +29,11 @@ class MainView:
         # Кнопки для добавления, изменения и удаления пациента
         button_frame = tk.Frame(root)
         button_frame.pack(fill="x",pady=10)
-        add_button = tk.Button(button_frame, text="Добавить пациента", command=self.open_add_patient_window)
+        add_button = tk.Button(button_frame, text="Добавить пациента", command=lambda: self.controller.open_add_patient_window(self.root))
         add_button.pack(side="left", pady=10)
-        delete_button = tk.Button(button_frame, text="Удалить пациента", command=self.delete_patient)
+        delete_button = tk.Button(button_frame, text="Удалить пациента", command=lambda: self.controller.delete_patient(self.table))
         delete_button.pack(side="left", pady=10)
-        delete_button = tk.Button(button_frame, text="Скорректировать", command=self.view_details)
+        delete_button = tk.Button(button_frame, text="Скорректировать", command=lambda: self.controller.view_details(self.table, self.root))
         delete_button.pack(side="left", pady=10)
         next_button = tk.Button(button_frame, text="Следующий>>", command=self.next_page)
         next_button.pack(side="right", pady=10)
@@ -43,7 +43,7 @@ class MainView:
         self.page_size = 10
         self.refresh_table()  # Загрузка данных в таблицу
 
-    def update(self, action):
+    def update(self, action, data):
         if action in ("add", "update", "delete"):
             self.refresh_table()
 
@@ -72,34 +72,6 @@ class MainView:
                 ),
                 iid=patient.get_id()  # Сохраняем ID как идентификатор строки
             )
-
-    def open_add_patient_window(self):
-        new_window = tk.Toplevel(self.root)
-        AddUpdatePatientView(new_window, AddUpdateController(self.controller.model), "add")
-
-    def delete_patient(self):
-        selected_item = self.table.selection()
-        if not selected_item:
-            messagebox.showwarning("Вы ничего не выбрали", "Выберите пациента для удаления")
-            return
-        # Получаем ID выбранного пациента
-        patient_id = selected_item[0]
-        self.controller.delete_patient(patient_id)
-        messagebox.showinfo("Завершено", "Пациента успешно удален!")
-
-    def view_details(self):
-        """Открытие окна с подробной информацией о пациенте для редактирования"""
-        selected_item = self.table.selection()
-        if not selected_item:
-            messagebox.showwarning("Вы ничего не выбрали", "Выберите пациента для изменения")
-            return
-        patient_id = selected_item[0]
-        patient_data = self.controller.model.get_patient_by_id(patient_id)
-        if patient_data:
-            new_window = tk.Toplevel(self.root)
-            AddUpdatePatientView(new_window, AddUpdateController(self.controller.model), "update", patient_data)
-        else:
-            messagebox.showwarning("Ошибка", "Не удалось найти пациента в базе данных")
 
     def prev_page(self):
         if self.current_page > 1:
