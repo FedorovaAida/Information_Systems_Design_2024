@@ -1,15 +1,17 @@
 import re
 import json
 from BasePatient import BasePatient
-
+from Patient_rep_DB import PatientRepDB
 
 # Полная версия класса пациента
+
+
 class Patient(BasePatient):
     def __init__(self, first_name, last_name, email, gender, phone, disease, id=None):
         super(Patient, self).__init__(first_name, last_name, email, id)
         self.set_gender(gender)
         self.set_phone(phone)
-        self.disease(disease)
+        self.set_disease(disease)
 
     # Классовый метод создания клиента из JSON
     @classmethod
@@ -51,7 +53,7 @@ class Patient(BasePatient):
 
     def set_gender(self, gender):
         if not self.validate_gender(gender):
-            raise ValueError("Пол должен быть 'м' или 'ж'.")
+            raise ValueError("Пол должен быть 'М' или 'Ж'.")
         self.__gender = gender
 
     # Функции валидации
@@ -61,7 +63,7 @@ class Patient(BasePatient):
 
     @staticmethod
     def validate_gender(gender):
-        return isinstance(gender, str) and gender in ('м', 'ж')
+        return isinstance(gender, str) and gender in ('М', 'Ж')
 
     @staticmethod
     def validate_phone(phone):
