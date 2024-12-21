@@ -1,6 +1,5 @@
-import os
 from PatientRepFileStrategy import PatientRepFileStrategy
-
+from BasePatient import BasePatient
 
 # Класс, который использует стратегию для работы с файлами
 class PatientRepFile:
@@ -9,94 +8,89 @@ class PatientRepFile:
         self._data = []
         self._strategy = strategy
 
-    def write_data_to_file(self):
+    def write(self):
         self._strategy.write(self._data)
 
-    def read_data_from_file(self):
+    def read(self):
         self._data = self._strategy.read()
 
-    def add_entity(self, patient):
-        """Добавить нового пациента в список с новым ID"""
+    def add_entity(self, first_name, last_name, email, gender, phone, disease):
+        from Patient import Patient
         # Генерация нового ID
         new_id = max([entry['id'] for entry in self._data], default=0) + 1
-        new_entity = {
-            'id': new_id,
-            'first_name': patient.get_first_name(),
-            'last_name': patient.get_last_name(),
-            'email': patient.get_email(),
-            'gender': patient.get_gender(),
-            'phone': patient.get_phone(),
-            'disease': patient.get_disease()
-        }
+        new_patient = Patient(
+            id=new_id,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            gender=gender,
+            phone=phone,
+            disease=disease
+        )
         # Проверка на уникальность почты
-        if any(entry['email'] == patient.get_email() for entry in self._data):
+        if any(entry == new_patient for entry in self._data):
             raise ValueError('Email должен быть уникальным!')
         # Добавляем нового пациента в список
-        self._data.append(new_entity)
+        self._data.append(new_patient)
 
     def get_by_id(self, patient_id):
-        """Получить пациента по ID"""
         for entry in self._data:
-            if entry['id'] == id:
+            if entry.get_id() == patient_id:
                 return entry
         return None  # Если объект не найден
 
     def get_k_n_short_list(self, k, n):
-        """Получить список k по счету n объектов"""
+        data = self._data.copy()
+
         start = (n - 1) * k
         end = start + k
-        return self._data[start:end]
+        page_data = data[start:end]
+
+        # Преобразуем в BasePatient
+        return [
+            BasePatient(
+                id=patient['id'],
+                first_name=patient['first_name'],
+                last_name=patient['last_name'],
+                email=patient['email']
+            )
+            for patient in page_data
+        ]
 
     def sort_by_field(self, field):
-        """Сортировать элементы по выбранному полю"""
         if field in ["first_name", "last_name", "email"]:
             self._data.sort(key=lambda x: x.get(field))
         return self._data
 
-    def replace_by_id(self, patient):
-        """Заменить данные пациента по ID"""
-
-        entity_id = patient.get_id()
-        first_name = patient.get_first_name()
-        last_name = patient.get_last_name()
-        email = patient.get_email()
-        gender = patient.get_gender()
-        phone = patient.get_phone()
-        disease = patient.get_disease()
-
+    def replace_by_id(self, entity_id, first_name, last_name, email, gender, phone, disease):
         entity = self.get_by_id(entity_id)
         if not entity:
             raise ValueError(f"Пациент с ID {entity_id} не найден.")
+
         # Проверка на уникальность почты
-        if email and email != entity['email'] and any(entry['email'] == email for entry in self._data):
+        patient = BasePatient(first_name=first_name, last_name=last_name, email=email)
+        if any(entry == patient for entry in self._data):
             raise ValueError('Email должен быть уникальным!')
         # Обновляем данные
         if first_name:
-            entity['first_name'] = first_name
+            entity.set_first_name(first_name)
         if last_name:
-            entity['last_name'] = last_name
+            entity.set_last_name(last_name)
         if email is not None:
-            entity['email'] = email
+            entity.set_email(email)
         if gender:
-            entity['gender'] = gender
+            entity.set_gender(gender)
         if phone:
-            entity['phone'] = phone
+            entity.set_phone(phone)
         if disease:
-            entity['disease'] = disease
+            entity.set_disease(disease)
 
 
     def delete_by_id(self, entity_id):
-        """Удалить пациента по ID"""
         entity = self.get_by_id(entity_id)
         if not entity:
             raise ValueError(f"Пациент с ID {entity_id} не найден.")
         self._data.remove(entity)
 
     def get_count(self):
-        """Получить количество элементов"""
         return len(self._data)
-
-    def get_count(self):
-        """Получить количество элементов"""
-        data = self.strategy.read()
-        return len(data)
